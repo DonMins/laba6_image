@@ -29,6 +29,7 @@ def addNoise(image, noise_percentage):
 
     return out
 
+
 def getError(img, img2):
     img3 = np.copy(img)
     img4 = np.copy(img2)
@@ -40,16 +41,17 @@ def getError(img, img2):
                     dtype=np.float64) / (width * height * 3)) ** 0.5
     return error
 
+
 def getMediana(img, listNotZero, kernerl):
     listPixel = []
     for m, n in listNotZero:
-        count = kernerl[m,n]
+        count = kernerl[m, n]
         for k in range(count):
             listPixel.append(img[m, n])
     return listPixel
 
-def medfilt(image, kernel,rank = None):
 
+def medfilt(image, kernel, rank=None):
     heightM, widthM = kernel.shape
     height, width = image.shape
 
@@ -65,14 +67,13 @@ def medfilt(image, kernel,rank = None):
     img2 = np.zeros((height + centerHeightM * 2, width + centerwidthM * 2), np.uint8)
     img2[centerHeightM:height + centerHeightM, centerwidthM:width + centerwidthM] = image
 
-    for i in range(centerHeightM+1):
+    for i in range(centerHeightM + 1):
         img2[i, :] = img2[centerHeightM, :]
         img2[height + 1 + i, :] = img2[height, :]
 
-    for i in range(centerwidthM+1):
+    for i in range(centerwidthM + 1):
         img2[:, i] = img2[:, centerwidthM]
         img2[:, width + 1 + i] = img2[:, width]
-
 
     new_image = np.zeros((height, width), np.uint8)
 
@@ -90,7 +91,6 @@ def medfilt(image, kernel,rank = None):
     return new_image
 
 
-
 if __name__ == '__main__':
     window = np.array([
         [0, 0, 1, 0, 0],
@@ -98,7 +98,6 @@ if __name__ == '__main__':
         [1, 2, 3, 2, 1],
         [0, 1, 2, 1, 0],
         [0, 0, 1, 0, 0]])
-
 
     img = cv2.imread("putin.png")
     imgNose = cv2.imread("imgNose.jpg")
@@ -109,9 +108,9 @@ if __name__ == '__main__':
     b, g, r = cv2.split(img)
     bNose, gNose, rNose = cv2.split(imgNose)
 
-    bm = medfilt(bNose,window)
-    gm = medfilt(gNose,window)
-    rm = medfilt(rNose,window)
+    bm = medfilt(bNose, window,1)
+    gm = medfilt(gNose, window,1)
+    rm = medfilt(rNose, window,1)
 
     res = cv2.merge((bm, gm, rm))
 
@@ -126,7 +125,3 @@ if __name__ == '__main__':
           100 - (getError(img, res) * 100 / getError(img, imgNose)), " %")
 
     cv2.waitKey(0)
-
-
-
-
